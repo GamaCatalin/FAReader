@@ -56,6 +56,12 @@ public class Menu {
     }
 
     private void checkSequence() {
+
+        if(!fa.isDeterministic()){
+            System.out.println("FA is not deterministic!");
+            return;
+        }
+
         System.out.print("Enter a sequence: ");
         String sequence = scanner.nextLine();
         System.out.println();
@@ -63,7 +69,10 @@ public class Menu {
         boolean isValid = true;
 
         for(String sChar : sequenceChars){
-            if(!fa.getAlphabet().contains(sChar)){
+            if(fa.getAlphabet().contains(sChar) || sChar.equals("")){
+
+            }
+            else{
                 isValid = false;
                 System.out.println("'" + sChar + "' is not part of the alphabet!");
             }

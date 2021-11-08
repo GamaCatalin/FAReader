@@ -36,9 +36,20 @@ public class FiniteAutomaton {
             String transitionString = reader.readLine();
             while(transitionString!=null){
                 String[] trans = transitionString.split("-");
-                Transition transition = new Transition(trans[0], trans[1], trans[2].strip());
+                Transition transition = new Transition(trans[0].strip(), trans[1].strip(), trans[2].strip());
 
-                this.transitions.add(transition);
+
+                boolean exists = false;
+
+                for(Transition checkTransition : transitions){
+                    if(transition.equals(checkTransition)){
+                        exists = true;
+                    }
+                }
+
+                if(!exists){
+                    this.transitions.add(transition);
+                }
 
                 transitionString = reader.readLine();
             }
@@ -73,6 +84,10 @@ public class FiniteAutomaton {
 
         String currentState = this.initialState;
 
+        if(sequence.length == 1 && sequence[0].equals("")){
+            return this.finalStates.contains(this.initialState);
+        }
+
         for(String sChar : sequence){
             boolean foundOne = false;
             for(Transition trans : this.transitions){
@@ -94,6 +109,25 @@ public class FiniteAutomaton {
             return false;
         }
 
+        return true;
+    }
+
+    public boolean isDeterministic(){
+
+        HashMap<String,ArrayList<String>> paths = new HashMap<>();
+        for(String state : this.states){
+            paths.put(state,new ArrayList<>());
+        }
+
+        for(Transition trans : this.transitions){
+            if(paths.get(trans.getStateA()).contains(trans.getPath())){
+
+                return false;
+            }
+            else{
+                paths.get(trans.getStateA()).add(trans.getPath());
+            }
+        }
         return true;
     }
 }
